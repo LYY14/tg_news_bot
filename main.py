@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import sqlite3
+import threading
 from time import sleep
 
 from telegram import Bot
-from telegram.ext import Updater
 from telegram.utils.request import Request
 
 from bot_configs import API_TOKEN, ADMIN_ID
@@ -17,8 +17,8 @@ URL = 'https://yandex.ru/news/region/salekhard'
 
 conn = sqlite3.connect('news_list.db')
 cursor = conn.cursor()
-cursor.execute('''CREATE TABLE news (title text, url text, source text, status bool)''')
-conn.commit()
+# cursor.execute('''CREATE TABLE news (title text, url text, source text, status bool)''')
+# conn.commit()
 
 
 request = Request(connect_timeout=3)
@@ -51,10 +51,16 @@ def generate_message_text(post):
     return f'<a href="{post["url"]}">{post["title"]}</a>\n\n#{post["source"]}'
 
 
+def update_channel_loop():
+    while True:
+        current_news = get_current_news(parse_news(URL))
+        for post in current_news:
+            post_new(post)
+            sleep(2)
+        sleep(900)
+
+
 if __name__ == '__main__':
     print('main')
-    current_news = get_current_news(parse_news(URL))
-    for post in current_news:
-        post_new(post)
-        sleep(2)
+    update_channel_loop()
     conn.close()

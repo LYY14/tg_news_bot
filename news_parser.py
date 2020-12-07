@@ -16,6 +16,7 @@ URL = 'https://yandex.ru/news/region/salekhard'
 
 
 def parse_news(url):
+    print('starting_parsing_news')
     request = requests.get(url)
     html = request.text
     soup = BeautifulSoup(html, 'lxml')
@@ -43,8 +44,12 @@ def get_current_news(parsed_news):
     for parsed in parsed_news:
         flag = False
         for db in db_data:
-            if db['url'] == parsed['url']:
-                flag = True
+            try:
+                if db['url'] == parsed['url']:
+                    flag = True
+            except TypeError:
+                if db[1] == parsed['url']:
+                    flag = True
         if not flag:
             result.append(parsed)
     return result
