@@ -1,48 +1,55 @@
-import sqlite3
+import psycopg2
+from psycopg2.extras import DictCursor
+
+from bot_configs import DB_HOST, DB_NAME, DB_PASS, DB_USER
 
 
-conn = sqlite3.connect('news_list.db')
-cursor = conn.cursor()
+# DB connection and cursor
+conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
+cursor = conn.cursor(cursor_factory=DictCursor)
 
 
-
-def get_all_data(cursor):
+def get_all_data() -> list:
+    """Получает все строки из базы"""
     cursor.execute('''SELECT * FROM news''')
     result = cursor.fetchall()
     return result
 
 
-def insert_data(conn, cursor, title, url, source):
+def insert_data(title: str, url: str, source: str) -> None:
+    """Получает заголовок ссылку и источник статьи и записывает их в БД"""
     cursor.execute(
         f'''INSERT INTO news (title, url, source, status) VALUES ('{title}', '{url}', '{source}', FALSE )'''
     )
     conn.commit()
 
 
-def update_data(conn, cursor, url):
-    cursor.execute(f'''UPDATE news SET status=TRUE WHERE url="{url}"''')
+def update_data(url: str) -> None:
+    """Меняет статус опубликованности поста на True"""
+    cursor.execute(f'''UPDATE news SET status=TRUE WHERE url='{url}';''')
     conn.commit()
 
 
-def delete_data(conn, cursor, url):
-    cursor.execute(f'''DELETE FROM news WHERE url="{url}"''')
+def delete_data(url: str) -> None:
+    """Получает url новости и удаляет её из базы"""
+    cursor.execute(f'''DELETE FROM news WHERE url='{url}';''')
     conn.commit()
 
 
 if __name__ == '__main__':
     print('db_engine')
-    insert_data(conn, cursor, 'title', 'url', 'source')
-    rows = get_all_data(cursor)
+    insert_data('title', 'url', 'source')
+    rows = get_all_data()
     for row in rows:
         print(row)
     print("uhybjhbbkbj")
-    update_data(conn, cursor, 'url')
-    rows = get_all_data(cursor)
+    update_data('url')
+    rows = get_all_data()
     for row in rows:
         print(row)
     print("uhybjhbbkbj")
-    delete_data(conn, cursor, 'url')
-    rows = get_all_data(cursor)
+    delete_data('url')
+    rows = get_all_data()
     for row in rows:
         print(row)
     print("uhybjhbbkbj")
