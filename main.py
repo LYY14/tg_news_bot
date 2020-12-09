@@ -7,7 +7,7 @@ from time import sleep
 from telegram import Bot
 from telegram.utils.request import Request
 
-from bot_configs import API_TOKEN, ADMIN_ID
+from bot_configs import API_TOKEN, ADMIN_ID, CHANNEL_ID
 from db_engine import update_data, insert_data
 from news_parser import get_current_news, parse_news
 
@@ -43,7 +43,7 @@ def log_error(f):
 @log_error
 def post_new(post):
     insert_data(conn, cursor, post['title'], post['url'], post['source'])
-    bot.send_message(chat_id=ADMIN_ID, text=generate_message_text(post), parse_mode='html')
+    bot.send_message(chat_id=CHANNEL_ID, text=generate_message_text(post), parse_mode='html')
     update_data(conn, cursor, post['url'])
 
 
@@ -56,7 +56,7 @@ def update_channel_loop():
         current_news = get_current_news(parse_news(URL))
         for post in current_news:
             post_new(post)
-            sleep(2)
+            sleep(5)
         sleep(900)
 
 

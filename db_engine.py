@@ -14,7 +14,7 @@ def get_all_data(cursor):
 
 def insert_data(conn, cursor, title, url, source):
     cursor.execute(
-        f'''INSERT INTO news VALUES ('{title}', '{url}', '{source}', FALSE )'''
+        f'''INSERT INTO news (title, url, source, status) VALUES ('{title}', '{url}', '{source}', FALSE )'''
     )
     conn.commit()
 
