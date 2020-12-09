@@ -1,21 +1,17 @@
 """модуль парсинга яндекс новостей регион салехард"""
 
 
-import sqlite3
-
 import requests
 from bs4 import BeautifulSoup
 
 from db_engine import get_all_data
 
-conn = sqlite3.connect('news_list.db')
-cursor = conn.cursor()
-
 
 URL = 'https://yandex.ru/news/region/salekhard'
 
 
-def parse_news(url):
+def parse_news(url: str) -> list:
+    """Получает url страницы, парсит её и спарсенные данные возвращает в виде списка словарей"""
     print('starting_parsing_news')
     request = requests.get(url)
     html = request.text
@@ -38,19 +34,16 @@ def parse_news(url):
     return result
 
 
-def get_current_news(parsed_news):
-    db_data = get_all_data(cursor)
+def get_current_news(parsed_news: list) -> list:
+    """Получает список спарсенных новостей, сверяет их с тем, что есть в БД и возвращает только свежие новости"""
+    db_data = get_all_data()
     result = []
     for parsed in parsed_news:
-        flag = False
+        is_not_in_db = True
         for db in db_data:
-            try:
-                if db['url'] == parsed['url']:
-                    flag = True
-            except TypeError:
-                if db[1] == parsed['url']:
-                    flag = True
-        if not flag:
+            if db['title'] == parsed['title']:
+                is_not_in_db = False
+        if is_not_in_db:
             result.append(parsed)
     return result
 
@@ -61,4 +54,3 @@ if __name__ == '__main__':
     current_news = get_current_news(parsed_news)
     for news in current_news:
         print(news)
-    conn.close()
