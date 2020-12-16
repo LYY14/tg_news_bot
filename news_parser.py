@@ -16,7 +16,7 @@ def parse_news(url: str) -> list:
     request = requests.get(url)
     html = request.text
     soup = BeautifulSoup(html, 'lxml')
-    news_cards = soup.find_all('article', class_='news-card')
+    news_cards = soup.find_all('article', class_='mg-card')
     result = []
     for news_card in news_cards:
         news_header = news_card.find('a', class_='news-card__link')
