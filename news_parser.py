@@ -13,7 +13,7 @@ URL = 'https://yandex.ru/news/region/salekhard'
 def parse_news(url: str) -> list:
     """Получает url страницы, парсит её и спарсенные данные возвращает в виде списка словарей"""
     print('starting_parsing_news')
-    request = requests.get(url)
+    request = requests.get(url=url, headers={'User-Agent': 'Custom'})
     html = request.text
     soup = BeautifulSoup(html, 'lxml')
     news_cards = soup.find_all('article', class_='mg-card')
