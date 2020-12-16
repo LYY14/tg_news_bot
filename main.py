@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
+from random import randint
 from time import sleep
 
 from telegram import Bot
@@ -53,7 +54,7 @@ def update_channel_loop():
         for post in current_news:
             post_new(post)
             sleep(5)
-        sleep(900)
+        sleep(randint(800, 1000))
 
 
 if __name__ == '__main__':
