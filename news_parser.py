@@ -19,7 +19,7 @@ def parse_news(url: str) -> list:
     news_cards = soup.find_all('article', class_='mg-card')
     result = []
     for news_card in news_cards:
-        news_header = news_card.find('a', class_='news-card__link')
+        news_header = news_card.find('a', class_='mg-card__link')
         url = news_header.get('href')
         title = news_header.text
         source = news_card.find('span', class_='mg-card-source__source').find('a').text.replace(' ', '')\
