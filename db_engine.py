@@ -38,19 +38,6 @@ def delete_data(url: str) -> None:
 
 if __name__ == '__main__':
     print('db_engine')
-    insert_data('title', 'url', 'source')
     rows = get_all_data()
     for row in rows:
         print(row)
-    print("uhybjhbbkbj")
-    update_data('url')
-    rows = get_all_data()
-    for row in rows:
-        print(row)
-    print("uhybjhbbkbj")
-    delete_data('url')
-    rows = get_all_data()
-    for row in rows:
-        print(row)
-    print("uhybjhbbkbj")
-

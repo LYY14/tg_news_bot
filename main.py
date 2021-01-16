@@ -20,7 +20,7 @@ bot = Bot(request=request, token=API_TOKEN)
 
 
 def log_error(f):
-    """Отлавливание ошибок телоеграм-бота"""
+    """Декоратор отлавливания ошибок телоеграм-бота"""
     def inner(*args, **kwargs):
         try:
             return f(*args, **kwargs)
@@ -35,7 +35,7 @@ def log_error(f):
 
 
 @log_error
-def post_new(post: dict):
+def post_new(post: dict) -> None:
     """Принимает тело поста и постит его в телеграм канал"""
     insert_data(post['title'], post['url'], post['source'])
     bot.send_message(chat_id=CHANNEL_ID, text=generate_message_text(post), parse_mode='html')
